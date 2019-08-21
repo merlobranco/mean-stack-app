@@ -1,5 +1,3 @@
-
-
 'use strict'
 
 var express = require('express');
@@ -8,13 +6,9 @@ var path = require('path');
 
 app.set('port', process.env.PORT || 3000);
 
-// Sending Home Page
-app.get('/', function(req, res) {
-	console.log('GET the homepage');
-	res
-		.status(200)
-		.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// Accesing to the static content of the public folder
+// In this case we are accesing to the home page
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Sending a json object
 app.get('/json', function(req, res) {
