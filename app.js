@@ -6,6 +6,9 @@ var path = require('path');
 
 app.set('port', process.env.PORT || 3000);
 
+// Loading routes
+var routes = require('./routes');
+
 // Calling a custom middleware for all the requests
 // that will display all the called routes in the static route
 // It's working because is before the access to the static content
@@ -21,21 +24,10 @@ app.use((req, res, next) => {
 // In this case we are accessing to the home page
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Sending a json object
-app.get('/json', (req, res) => {
-	console.log('GET the json');
-	res
-		.status(200)
-		.json({'jsonData': true});
-});
 
-// Sending a file
-app.get('/file', (req, res) => {
-	console.log('GET the file');
-	res
-		.status(200)
-		.sendFile(path.join(__dirname, 'app.js'));
-});
+// Using the defined routes on index.js
+app.use('/api', routes);
+
 
 var server = app.listen(app.get('port'), () => {
 	var port = server.address().port;
