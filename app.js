@@ -7,7 +7,7 @@ var path = require('path');
 app.set('port', process.env.PORT || 3000);
 
 // Loading routes
-var routes = require('./routes');
+var routes = require('./api/routes');
 
 // Calling a custom middleware for all the requests
 // that will display all the called routes in the static route
