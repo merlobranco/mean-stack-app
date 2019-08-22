@@ -12,5 +12,7 @@ router.get('/hotels', HotelsController.getAll);
 
 router.get('/hotels/:id', HotelsController.getHotel);
 
+router.post('/hotels', HotelsController.addHotel);
+
 // Exporting the instatiated router
 module.exports = router;

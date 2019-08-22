@@ -5,9 +5,18 @@ var hotelData = require('../data/hotel-data');
 
 var getAll = function(req, res) {
 	console.log('GET list of hotels');
+	// Retrieving the query string parameters
+	console.log(req.query);
+
+	var offset = req.query.offset || 0;
+	var count = req.query.count || hotelData.length;
+	var end = offset + count;
+	if (end > hotelData.length)
+		end = hotelData.length;
+	var result = hotelData.slice(offset, end);
 	res
 		.status(200)
-		.json(hotelData);
+		.json(result);
 };
 
 var getHotel = function(req, res) {
@@ -19,7 +28,16 @@ var getHotel = function(req, res) {
 		.json(hotel);
 }
 
+var addHotel = function(req, res) {
+	console.log("POST new hotel");
+	console.log(req.body)
+	res
+		.status(200)
+		.json(req.body);
+}
+
 module.exports = {
 	getAll,
 	getHotel,
+	addHotel
 };
