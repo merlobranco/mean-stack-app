@@ -10,5 +10,7 @@ var HotelsController = require('../controllers/hotels');
 // Sending a json object
 router.get('/hotels', HotelsController.getAll);
 
+router.get('/hotels/:id', HotelsController.getHotel);
+
 // Exporting the instatiated router
 module.exports = router;
