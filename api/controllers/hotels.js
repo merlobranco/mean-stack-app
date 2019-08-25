@@ -4,35 +4,48 @@
 
 var dbConn = require('../data/dbconnection');
 var hotelData = require('../data/hotel-data');
+var ObjectId = require('mongodb').ObjectId;
 
 var getAll = function(req, res) {
 
-	var db = dbConn.get();
-
-	console.log('db', db);
-
-	console.log('GET list of hotels');
 	// Retrieving the query string parameters
 	console.log(req.query);
 
-	var offset = req.query.offset || 0;
-	var count = req.query.count || hotelData.length;
-	var end = offset + count;
-	if (end > hotelData.length)
-		end = hotelData.length;
-	var result = hotelData.slice(offset, end);
-	res
-		.status(200)
-		.json(result);
+	var offset = 0;
+	var count = 5;
+
+	if (req.query && req.query.offset) {
+		offset = parseInt(req.query.offset, 10);
+	}
+
+	if (req.query && req.query.count) {
+		count = parseInt(req.query.count, 10);
+	}
+
+	var db = dbConn.get();
+	db.collection('hotels')
+		.find()
+		.skip(offset)
+		.limit(count)
+		.toArray((err, data) => {
+			console.log('Found hotels', data);
+			res
+				.status(200)
+				.json(data);
+			});
 };
 
 var getHotel = function(req, res) {
 	var id = req.params.id;
-	var hotel = hotelData[id];
-	console.log('GET hotel ', id);
-	res
-		.status(200)
-		.json(hotel);
+
+	var db = dbConn.get();
+	db.collection('hotels')
+		.findOne({_id: ObjectId(id)}, (err, data) => {
+			console.log('Found hotel', data);
+			res
+				.status(200)
+				.json(data);
+			});
 }
 
 var addHotel = function(req, res) {
