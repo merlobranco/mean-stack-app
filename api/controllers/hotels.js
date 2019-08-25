@@ -1,9 +1,16 @@
 'use strict'
 // Since it is a json file we just could use require in order to read it
 // With other type of files we should use the fs module
+
+var dbConn = require('../data/dbconnection');
 var hotelData = require('../data/hotel-data');
 
 var getAll = function(req, res) {
+
+	var db = dbConn.get();
+
+	console.log('db', db);
+
 	console.log('GET list of hotels');
 	// Retrieving the query string parameters
 	console.log(req.query);
