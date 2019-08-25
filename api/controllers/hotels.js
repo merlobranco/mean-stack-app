@@ -50,10 +50,25 @@ var getHotel = function(req, res) {
 
 var addHotel = function(req, res) {
 	console.log("POST new hotel");
-	console.log(req.body)
-	res
-		.status(200)
-		.json(req.body);
+
+	if (!req.body || !req.body.name || !req.body.stars) {
+		console.log('Data missing from body');
+		res
+			.status(400)
+			.json({message: 'Required data missing from body'});
+	}
+
+	var hotel = req.body;
+	hotel.stars = parseInt(hotel.stars, 10);
+	
+	var db = dbConn.get();
+	db.collection('hotels')
+		.insertOne(hotel, (err, data) => {
+			console.log(hotel);
+			res
+				.status(201)
+				.json(data.ops);
+		});
 }
 
 module.exports = {
