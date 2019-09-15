@@ -1,6 +1,6 @@
 'use strict'
 
-require('./api/data/dbconnection').open();
+require('./api/data/db');
 
 var express = require('express');
 var app = express();
