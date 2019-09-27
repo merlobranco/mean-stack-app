@@ -1,3 +1,5 @@
+'use strict'
+
 var mongoose = require('mongoose'); 
 var dburl = 'mongodb://localhost:27017/mean-hotel';
 
@@ -45,3 +47,7 @@ process.once('SIGUSR2', () => {
 		process.kill(process.pid, 'SIGUSR2');
 	});
 });
+
+// Bring in Schemas and Models
+//var Hotel = require('./models/hotel');
+require('./models/hotel');
