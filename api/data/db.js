@@ -49,5 +49,4 @@ process.once('SIGUSR2', () => {
 });
 
 // Bring in Schemas and Models
-//var Hotel = require('./models/hotel');
 require('./models/hotel');
