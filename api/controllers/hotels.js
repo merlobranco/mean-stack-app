@@ -34,7 +34,7 @@ var getAll = function(req, res) {
 
 var getHotel = function(req, res) {
 	var id = req.params.id;
-	console.log('Get holtel id: ', id);
+	console.log('Get hotel id: ', id);
 
 	Hotel
 		.findById(id)
