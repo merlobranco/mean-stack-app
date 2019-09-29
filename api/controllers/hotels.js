@@ -2,9 +2,9 @@
 // Since it is a json file we just could use require in order to read it
 // With other type of files we should use the fs module
 
-var dbConn = require('../data/dbconnection');
-var hotelData = require('../data/hotel-data');
-var ObjectId = require('mongodb').ObjectId;
+var mongoose = require('mongoose');
+var Hotel = mongoose.model('Hotel');
+
 
 var getAll = function(req, res) {
 
@@ -22,25 +22,23 @@ var getAll = function(req, res) {
 		count = parseInt(req.query.count, 10);
 	}
 
-	var db = dbConn.get();
-	db.collection('hotels')
+	Hotel
 		.find()
 		.skip(offset)
 		.limit(count)
-		.toArray((err, data) => {
-			console.log('Found hotels', data);
-			res
-				.status(200)
-				.json(data);
-			});
+		.exec((err, hotels) => {
+			console.log('Found hotels: ', hotels.length);
+			res.json(hotels);
+	});
 };
 
 var getHotel = function(req, res) {
 	var id = req.params.id;
+	console.log('Get holtel id: ', id);
 
-	var db = dbConn.get();
-	db.collection('hotels')
-		.findOne({_id: ObjectId(id)}, (err, data) => {
+	Hotel
+		.findById(id)
+		.exec((err, data) => {
 			console.log('Found hotel', data);
 			res
 				.status(200)
