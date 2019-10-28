@@ -127,8 +127,13 @@ var _addReview = function(req, res, hotel) {
 	});
 };
 
+var updateReview = function(req, res) {
+
+};
+
 module.exports = {
 	getAll,
 	getReview,
-	addReview
+	addReview,
+	updateReview
 };

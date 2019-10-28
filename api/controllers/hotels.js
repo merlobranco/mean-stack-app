@@ -43,7 +43,6 @@ var runGeoQuery = function(req, res) {
 	   	});
 };
 
-
 var getAll = function(req, res) {
 
 	var offset = 0;
@@ -137,7 +136,6 @@ var addHotel = function(req, res) {
 					parseFloat(req.body.lat)
 				]
 			}
-
 		}, (err, hotel) => {
 			
 			if (err) {
@@ -156,6 +154,60 @@ var addHotel = function(req, res) {
 		});
 };
 
+var updateHotel = function(req, res) {
+	var id = req.params.id;
+	console.log('Put hotel id: ', id);
+
+	Hotel
+		.findById(id)
+		.select('-reviews -rooms') // Excluding subdocuments from the update operation
+		.exec((err, data) => {
+			var response = {
+				status: 200,
+				message: data
+			};
+			if (err) {
+				console.log('Error finding the hotel');
+				response.status = 500;
+				response.message = err;
+			} else if (!data) {
+				response.status = 404;
+				response.message = {'message': 'Hotel with ID: ' + id + 'not found'};
+			}
+			if (response.status !== 200) {
+				res
+				.status(response.status)
+				.json(response.message);
+			} else {
+				data.name = req.body.name;
+				data.description = req.body.description;
+				data.stars = parseInt(req.body.stars, 10);
+				data.services = _splitArray(req.body.services);
+				data.photos = _splitArray(req.body.photos);
+				data.currency = req.body.currency;
+				data.location = {
+					address: req.body.address,
+					coordinates: [
+						parseFloat(req.body.lng), 
+						parseFloat(req.body.lat)
+					]
+				};
+				data.save((err, updateHotel) => {
+					if (err) {
+						res
+							.status(500)
+							.json(err);
+					} else {
+						res
+							.status(204) // No content success status response code
+							.json();
+					}
+				});
+			}
+			
+		});			
+};
+
 var _splitArray = function(input) {
 	if (input && input.length > 0) 
 		return input.split(';');
@@ -165,5 +217,6 @@ var _splitArray = function(input) {
 module.exports = {
 	getAll,
 	getHotel,
-	addHotel
+	addHotel,
+	updateHotel
 };
