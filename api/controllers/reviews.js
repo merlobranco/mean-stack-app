@@ -14,11 +14,26 @@ var getAll = function(req, res) {
 		// The document will be retrieved containing only that element
 		.select('reviews')
 		.exec((err, data) => {
-			console.log('Found hotel', data);
+			var response = {
+        		status : 200,
+        		message : []
+      		};
+      		if (err) {
+		    	console.log('Error finding hotel');
+		        response.status = 500;
+		        response.message = err;
+		    } else if(!data) {
+		        console.log('Hotel id not found in database', id);
+		        response.status = 404;
+		        response.message = {'message' : 'Hotel ID not found ' + id};
+		    } else {
+		    	console.log('Found hotel', data);
+		        response.message = data.reviews ? data.reviews : [];
+		    }
 			res
-				.status(200)
-				.json(data.reviews);
-			});
+				.status(response.status)
+				.json(response.message);
+		});
 }
 
 var getReview = function(req, res) {
@@ -30,13 +45,32 @@ var getReview = function(req, res) {
 		.findById(id)
 		.select('reviews')
 		.exec((err, hotel) => {
-			console.log('Found hotel', hotel);
-			// Mongoose allows us to extract the review identified by the provided reviewId
-			var review = hotel.reviews.id(reviewId);
+			var response = {
+        		status : 200,
+        		message : {}
+      		};
+      		if (err) {
+		    	console.log('Error finding hotel');
+		        response.status = 500;
+		        response.message = err;
+		    } else if(!hotel) {
+		        console.log('Hotel id not found in database', id);
+		        response.status = 404;
+		        response.message = {'message' : 'Hotel ID not found ' + id};
+		    } else {
+		    	console.log('Found hotel', hotel);
+		    	// Mongoose allows us to extract the review identified by the provided reviewId
+		        response.message = hotel.reviews.id(reviewId);
+		        if (!response.message) {
+		        	response.status = 404;
+		        	response.message = {'message' : 'Review ID not found ' + reviewId};
+		        }
+
+		    }
 			res
-				.status(200)
-				.json(review);
-			});
+				.status(response.status)
+				.json(response.message);
+		});
 }
 
 module.exports = {

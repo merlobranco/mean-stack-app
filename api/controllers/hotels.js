@@ -9,6 +9,13 @@ var runGeoQuery = function(req, res) {
 	var lng = parseFloat(req.query.lng);
 	var lat = parseFloat(req.query.lat);
 
+	if (isNaN(lng) || isNaN(lat)) {
+		res
+			.status(400)
+			.json({'message': 'If provided, lng and lat coordinates should be numbers'});
+		return;
+	}
+
 	Hotel
 		.aggregate([
 			{
@@ -23,10 +30,16 @@ var runGeoQuery = function(req, res) {
 		   },
 	   		{ $limit: 5 } // Number of returned records
 	   	], (err, results) => {
-	   		console.log('Geo results: ', results);
-	   		res
-				.status(200)
-				.json(results);
+	   		if (err) {
+				console.log('Error finding Hotels 2km around the provided coordinates (Lng: ' + lng + ', Lat: ' + lat + ')');
+				res
+					.status(500)
+					.json(err);
+			} 
+			else {
+				console.log('Geo results: ', results.length);
+				res.json(results); // By default the status is 200
+			}
 	   	});
 }
 
@@ -105,7 +118,7 @@ var getHotel = function(req, res) {
 			res
 				.status(response.status)
 				.json(response.message);
-			});
+		});
 				
 }
 
