@@ -128,6 +128,58 @@ var _addReview = function(req, res, hotel) {
 };
 
 var updateReview = function(req, res) {
+	var id = req.params.id;
+	var reviewId = req.params.reviewId;
+	console.log('Put review id: ' + reviewId + ', for hotel id: ' + id);
+
+	Hotel
+		.findById(id)
+		.select('reviews')
+		.exec((err, hotel) => {
+			var review;
+			var response = {
+        		status : 200,
+        		message : {}
+      		};
+      		if (err) {
+		    	console.log('Error finding hotel');
+		        response.status = 500;
+		        response.message = err;
+		    } else if(!hotel) {
+		        console.log('Hotel id not found in database', id);
+		        response.status = 404;
+		        response.message = {'message' : 'Hotel ID not found ' + id};
+		    } else {
+		    	console.log('Found hotel', hotel);
+		    	// Mongoose allows us to extract the review identified by the provided reviewId
+		        review = hotel.reviews.id(reviewId);
+		        if (!review) {
+		        	response.status = 404;
+		        	response.message = {'message' : 'Review ID not found ' + reviewId};
+		        }
+		    }
+		    if (response.status !== 200) {
+		    	res
+					.status(response.status)
+					.json(response.message);
+		    } else {
+		    	review.name = req.body.name;
+				review.rating = parseInt(req.body.rating, 10);
+				review.review = req.body.review;
+				hotel.save((err, updateHotel) => {
+					if (err) {
+						res
+							.status(500)
+							.json(err);
+					} else {
+						res
+							.status(204) // No content success status response code
+							.json();
+					}
+				});
+		    }
+			
+		});
 
 };
 
