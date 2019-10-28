@@ -41,7 +41,7 @@ var runGeoQuery = function(req, res) {
 				res.json(results); // By default the status is 200
 			}
 	   	});
-}
+};
 
 
 var getAll = function(req, res) {
@@ -118,32 +118,69 @@ var getHotel = function(req, res) {
 			res
 				.status(response.status)
 				.json(response.message);
-		});
-				
-}
+		});				
+};
 
 var addHotel = function(req, res) {
-	console.log("POST new hotel");
+	// console.log("POST new hotel");
 
-	if (!req.body || !req.body.name || !req.body.stars) {
-		console.log('Data missing from body');
-		res
-			.status(400)
-			.json({message: 'Required data missing from body'});
-	}
+	// if (!req.body || !req.body.name || !req.body.stars) {
+	// 	console.log('Data missing from body');
+	// 	res
+	// 		.status(400)
+	// 		.json({message: 'Required data missing from body'});
+	// }
 
-	var hotel = req.body;
-	hotel.stars = parseInt(hotel.stars, 10);
+	// var hotel = req.body;
+	// hotel.stars = parseInt(hotel.stars, 10);
 	
-	var db = dbConn.get();
-	db.collection('hotels')
-		.insertOne(hotel, (err, data) => {
-			console.log(hotel);
-			res
-				.status(201)
-				.json(data.ops);
+	// var db = dbConn.get();
+	// db.collection('hotels')
+	// 	.insertOne(hotel, (err, data) => {
+	// 		console.log(hotel);
+	// 		res
+	// 			.status(201)
+	// 			.json(data.ops);
+	// 	});
+	Hotel
+		.create({
+			name: req.body.name,
+			description: req.body.description,
+			stars: parseInt(req.body.stars, 10),
+			services: _splitArray(req.body.services),
+			photos: _splitArray(req.body.photos),
+			currency: req.body.currency,
+			location: {
+				address: req.body.address,
+				coordinates: [
+					parseFloat(req.body.lng), 
+					parseFloat(req.body.lat)
+				]
+			}
+
+		}, (err, hotel) => {
+			
+			if (err) {
+				console.log('Error creating hotel');
+				res
+					.status(500)
+					.json(err);
+			}
+			else {
+				console.log('Hotel created ', hotel);
+				res
+					.status(201)
+					.json(hotel);
+
+			}
 		});
-}
+};
+
+var _splitArray = function(input) {
+	if (input && input.length > 0) 
+		return input.split(';');
+	return [];
+};
 
 module.exports = {
 	getAll,
