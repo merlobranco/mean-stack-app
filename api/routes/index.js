@@ -18,6 +18,7 @@ router.post('/hotels', HotelsController.addHotel);
 //	.post(HotelsController.addHotel);
 router.get('/hotels/:id', HotelsController.getHotel);
 router.put('/hotels/:id', HotelsController.updateHotel);
+router.delete('/hotels/:id', HotelsController.deleteHotel);
 
 
 
@@ -27,6 +28,7 @@ router.post('/hotels/:id/reviews', ReviewsController.addReview);
 
 router.get('/hotels/:id/reviews/:reviewId', ReviewsController.getReview);
 router.put('/hotels/:id/reviews/:reviewId', ReviewsController.updateReview);
+router.delete('/hotels/:id/reviews/:reviewId', ReviewsController.deleteReview);
 
 // Exporting the instatiated router
 module.exports = router;

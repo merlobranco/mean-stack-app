@@ -208,6 +208,26 @@ var updateHotel = function(req, res) {
 		});			
 };
 
+var deleteHotel = function(req, res) {
+	var id = req.params.id;
+	console.log('Delete hotel id: ', id);
+
+	Hotel
+		.findByIdAndRemove(id)
+		.exec((err, hotel) => {
+			if (err) {
+				res
+					.status(404)
+					json(err);
+			} else {
+				console.log('Hotel deleted, id: ', id);
+				res
+					.status(204)
+					.json();
+			}
+		});
+}
+
 var _splitArray = function(input) {
 	if (input && input.length > 0) 
 		return input.split(';');
@@ -218,5 +238,6 @@ module.exports = {
 	getAll,
 	getHotel,
 	addHotel,
-	updateHotel
+	updateHotel,
+	deleteHotel
 };
