@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'); 
 var dburl = 'mongodb://localhost:27017/mean-hotel';
 
-mongoose.connect(dburl);
+mongoose.connect(dburl, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
 // Listening to the connected event
 mongoose.connection.on('connected', () => {
