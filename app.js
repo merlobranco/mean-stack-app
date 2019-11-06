@@ -26,6 +26,7 @@ app.use((req, res, next) => {
 // Accesing to the static content of the public folder
 // In this case we are accessing to the home page
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/node_modules', express.static(__dirname + '/node_modules'));
 
 // body-parser middlewares 
 //	urlencoded: for the information sent by HTML pages on their body POST request
