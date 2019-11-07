@@ -10,17 +10,10 @@ function HotelDataFactory($http) {
 
 	function getAllHotels() {
 		return $http.get('/api/hotels?count=10').then(complete).catch(failed);
-
-	// 	$http.get('api/hotels?count=10').then((response) => {
-	// 	vm.hotels = response.data;
-	// });
 	}
 
 	function getHotel(id) {
 		return $http.get('/api/hotels/' + id).then(complete).catch(failed);
-	// 	$http.get('api/hotels/' + id).then((response) => {
-	// 	vm.hotel = response.data;
-	// });
 	}
 
 	function complete(response) {
