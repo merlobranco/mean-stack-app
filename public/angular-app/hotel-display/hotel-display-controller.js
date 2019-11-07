@@ -8,6 +8,7 @@ function HotelController($routeParams, HotelDataFactory) {
 	HotelDataFactory.getHotel(id).then((response) => {
 		vm.hotel = response;
 		vm.stars = _getStarRating(response.stars);
+		console.log (vm.stars);
 	});
 
 	// Transforming the stars number value to an array
