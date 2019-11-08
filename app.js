@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //			true: we will receive other data types
 //	json: for receiving json from the body POST request
 app.use(bodyParser.urlencoded({extended: false}));
+// For understanding the data angular is sending
 app.use(bodyParser.json());
 
 
