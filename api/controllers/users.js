@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
+var jwt = require('jsonwebtoken');
 var User = mongoose.model('User');
 
 var register = function(req, res) {
@@ -45,31 +46,50 @@ var login = function(req, res) {
 			username: username
 		})
 		.exec((err, user) => {
-			var response = {
-				status: 200,
-				message: user
-			};
 			if (err) {
 				console.log('Error finding the user');
-				response.status = 500;
-				response.message = err;
+				res.status(500).json(err);
 			} 
 			else if (!user) {
-				response.status = 404;
-				response.message = {'message': 'User identified by ' + username + ' does not exist'};
+				res.status(404).json({'message': 'User identified by ' + username + ' does not exist'});
 			}
 			else if (!bcrypt.compareSync(password, user.password)) {
-				response.status = 401;
-				response.message = {'message': 'Unauthorized'};
+				res.status(401).json({'message': 'Unauthorized'});
 			}
-			res
-				.status(response.status)
-				.json(response.message);
-		});		 
+			else {
+				// We should provide the payload, secret (Should be better hidden) and the expiration (In this case 1 hour)
+				var token = jwt.sign({ username: user.username}, 's3cr3t', { expiresIn: 3600 });
+				res.status(200).json({ 'success': true, 'token': token });
+			}
+		});
+}
 
+/**
+ * Creating our authenticate middleware
+ */
+var authenticate = function(req, res, next) {
+	var header = req.headers.authorization;
+	if (header) {
+		var token = header.split(' ')[1]; //--> Authorization Bearer xxx <- We want the xxx part
+		jwt.verify(token, 's3cr3t', (error, decoded) => {
+			if (error) {
+				console.log(error);
+				res.status(401).json({'message': 'Unauthorized'});
+			}
+			else {
+				// Accesimg to the username property we added previously on the payload of the web token
+				req.user = decoded.username;
+				next(); // Next function that will be executed
+			}
+		});
+	}
+	else {
+		res.status(403).json({'message': 'No token provided'});
+	}
 }
 
 module.exports = {
 	register,
-	login
+	login,
+	authenticate
 };

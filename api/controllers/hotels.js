@@ -44,6 +44,8 @@ var runGeoQuery = function(req, res) {
 };
 
 var getAll = function(req, res) {
+	// Accessing to the value we added through the payload of the JWT
+	console.log('Requested by: ' + req.user);
 
 	var offset = 0;
 	var count = 5;
