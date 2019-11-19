@@ -14,6 +14,22 @@ function LoginController($http, $location, $window, AuthFactory) {
 	};
 
 	vm.login = function() {
+		if (!vm.username || !vm.password)
+			return;
+
+		console.log('Logging...');
+
+  		var user = {
+    		username: vm.username,
+    		password: vm.password
+  		};
+
+  		$http.post('/api/users/login', user).then((response) => {
+    		console.log(response);
+  		}).catch((error) => {
+    		console.log(error);
+  		})
+
 	};
 
 	vm.logout = function() {
