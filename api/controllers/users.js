@@ -77,7 +77,7 @@ var authenticate = function(req, res, next) {
 				res.status(401).json({'message': 'Unauthorized'});
 			}
 			else {
-				// Accesimg to the username property we added previously on the payload of the web token
+				// Accesing to the username property we added previously on the payload of the web token
 				req.user = decoded.username;
 				next(); // Next function that will be executed
 			}
