@@ -10,7 +10,8 @@ var UsersController = require('../controllers/users');
 
 // Adding routes to the router with the path we want to map and te method we want to use
 // Sending a json object
-router.get('/hotels', UsersController.authenticate, HotelsController.getAll);
+//router.get('/hotels', UsersController.authenticate, HotelsController.getAll);
+router.get('/hotels', HotelsController.getAll);
 router.post('/hotels', HotelsController.addHotel);
 // Shorcut for
 // router
