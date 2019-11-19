@@ -2,7 +2,7 @@
 
 angular.module('meanhotel').controller('LoginController', LoginController);
 
-function LoginController($http, $location, $window, AuthFactory) {
+function LoginController(UserDataFactory, $location, $window, AuthFactory) {
 	var vm = this;
 
 	vm.isLoggedIn = function () {
@@ -24,11 +24,18 @@ function LoginController($http, $location, $window, AuthFactory) {
     		password: vm.password
   		};
 
-  		$http.post('/api/users/login', user).then((response) => {
+  		UserDataFactory.postLogin(user).then((response) => {
     		console.log(response);
   		}).catch((error) => {
     		console.log(error);
   		})
+
+
+  		// $http.post('/api/users/login', user).then((response) => {
+    // 		console.log(response);
+  		// }).catch((error) => {
+    // 		console.log(error);
+  		// })
 
 	};
 
