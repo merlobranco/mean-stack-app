@@ -6,8 +6,7 @@ function HotelDataFactory($http) {
 	return {
 		getAllHotels: getAllHotels,
 		getHotel: getHotel,
-		postReview: postReview,
-		postUser: postUser
+		postReview: postReview
 	};
 
 	function getAllHotels() {
@@ -20,10 +19,6 @@ function HotelDataFactory($http) {
 
 	function postReview(id,review) {
 		return $http.post('/api/hotels/' + id + '/reviews', review).then(complete).catch(failed);
-	}
-
-	function postUser(user) {
-		return $http.post('/api/users/register', user).then(complete).catch(failed);
 	}
 
 	function complete(response) {
