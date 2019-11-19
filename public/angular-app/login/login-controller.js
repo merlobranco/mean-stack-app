@@ -25,21 +25,21 @@ function LoginController(UserDataFactory, $location, $window, AuthFactory) {
   		};
 
   		UserDataFactory.postLogin(user).then((response) => {
-    		console.log(response);
+  			if (response.data.success) {
+  				// Storing the token in the Browser session storage
+	    		$window.sessionStorage.token = response.data.token;
+	          	AuthFactory.isLoggedIn = true;
+	  		}
   		}).catch((error) => {
     		console.log(error);
   		})
-
-
-  		// $http.post('/api/users/login', user).then((response) => {
-    // 		console.log(response);
-  		// }).catch((error) => {
-    // 		console.log(error);
-  		// })
-
 	};
 
 	vm.logout = function() {
+		AuthFactory.isLoggedIn = false;
+		// Deleting the token in the Browser session storage
+    	delete $window.sessionStorage.token;
+    	$location.path('/');
 	};
 
 	// Managing the navigation
