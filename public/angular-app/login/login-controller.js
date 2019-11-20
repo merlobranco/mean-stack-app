@@ -2,7 +2,7 @@
 
 angular.module('meanhotel').controller('LoginController', LoginController);
 
-function LoginController(UserDataFactory, $location, $window, AuthFactory) {
+function LoginController(UserDataFactory, $location, $window, AuthFactory, jwtHelper) {
 	var vm = this;
 
 	vm.isLoggedIn = function () {
@@ -29,6 +29,10 @@ function LoginController(UserDataFactory, $location, $window, AuthFactory) {
   				// Storing the token in the Browser session storage
 	    		$window.sessionStorage.token = response.data.token;
 	          	AuthFactory.isLoggedIn = true;
+	          	var token = $window.sessionStorage.token;
+				var decodedToken = jwtHelper.decodeToken(token);
+				// Accesing to the username property we added previously on the payload of the web token
+				vm.loggedInUser = decodedToken.username;
 	  		}
   		}).catch((error) => {
     		console.log(error);
