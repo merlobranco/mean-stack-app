@@ -1,30 +1,61 @@
 'use strict'
 
-angular.module('meanhotel',['ngRoute']).config(config);
+angular.module('meanhotel',['ngRoute']).config(config).run(run);
 
 
-function config($routeProvider) {
+function config($httpProvider, $routeProvider) {
+	// Adding our custom interceptor
+	$httpProvider.interceptors.push('AuthInterceptor');
+
 	$routeProvider
 		.when('/', {
-			templateUrl: 'angular-app/main/main.html'
+			templateUrl: 'angular-app/main/main.html',
+			access: {
+				restricted: false
+			}
 		})
 		.when('/hotels', {
 			templateUrl: 'angular-app/hotel-list/hotels.html',
 			controller: 'HotelsController',
-			controllerAs: 'vm'
+			controllerAs: 'vm',
+			access: {
+				restricted: false
+			}
 		})
 		.when('/hotel/:id', {
 			templateUrl: 'angular-app/hotel-display/hotel.html',
 			controller: 'HotelController',
-			controllerAs: 'vm'
+			controllerAs: 'vm',
+			access: {
+				restricted: false
+			}
 		})
 		.when('/register', {
 			templateUrl: 'angular-app/register/register.html',
 			controller: 'RegisterController',
-			controllerAs: 'vm'
+			controllerAs: 'vm',
+			access: {
+				restricted: false
+			}
+		})
+		.when('/profile', {
+			templateUrl: 'angular-app/profile/profile.html',
+			controllerAs: 'vm',
+			access: {
+				restricted: true
+			}
 		})
 		.otherwise({
 			redirectTo: '/'
 		});
 }
 
+function run($rootScope, $location, $window, AuthFactory) {
+	// Listening on the event '$routeChangeStart 
+  	$rootScope.$on('$routeChangeStart', (event, nextRoute, currentRoute) => {
+    	if (nextRoute.access !== undefined && nextRoute.access.restricted && !$window.sessionStorage.token && !AuthFactory.isLoggedIn) {
+      		event.preventDefault();
+      		$location.path('/');
+    	}
+  	});
+}
