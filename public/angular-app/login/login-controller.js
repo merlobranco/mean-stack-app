@@ -6,11 +6,7 @@ function LoginController(UserDataFactory, $location, $window, AuthFactory, jwtHe
 	var vm = this;
 
 	vm.isLoggedIn = function () {
-		if (AuthFactory.isLoggedIn) {
-			return true;
-		} else {
-			return false;
-		}
+		return AuthFactory.isLoggedIn;
 	};
 
 	vm.login = function() {

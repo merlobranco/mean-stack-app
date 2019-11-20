@@ -26,7 +26,8 @@ router.delete('/hotels/:id', HotelsController.deleteHotel);
 
 // Reviews routes
 router.get('/hotels/:id/reviews', ReviewsController.getAll);
-router.post('/hotels/:id/reviews', ReviewsController.addReview);
+// Controlling on the backend that only a logged user with a valid token can create a review
+router.post('/hotels/:id/reviews', UsersController.authenticate, ReviewsController.addReview);
 
 router.get('/hotels/:id/reviews/:reviewId', ReviewsController.getReview);
 router.put('/hotels/:id/reviews/:reviewId', ReviewsController.updateReview);
